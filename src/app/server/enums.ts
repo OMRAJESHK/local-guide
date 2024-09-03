@@ -10,6 +10,11 @@ export enum ErrorMessages {
 }
 
 export enum PlacesEnum {
+  PLACES_GET_SUCCESS = "Place Found",
+
+  PLACE_GETBYID_SUCCESS = "Place Found",
+  PLACE_GETBYID_FAIL = "Place Not Found",
+
   PLACE_SAVE_SUCCESS = "Place Added Successfully",
   PLACE_SAVE_FAIL = "Place Not Saved",
 

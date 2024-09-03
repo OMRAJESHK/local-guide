@@ -18,7 +18,7 @@ export function getPaginationValidation(urlString: string) {
 
 export function getPagination(limit: number, page: number, totalUsers: number) {
   const pagination: PaginationType = {
-    total: totalUsers,
+    limit,
     currentPage: page,
     totalPages: Math.ceil(totalUsers / limit),
   };

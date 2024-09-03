@@ -19,5 +19,6 @@ export const paginationValidator = z
   .object({
     limit: z.string().optional().default("10"),
     page: z.string().optional().default("1"),
+    query: z.string().optional(),
   })
   .strict();

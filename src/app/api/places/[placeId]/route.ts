@@ -5,6 +5,32 @@ import { placeValidator } from "@/app/server/validation";
 import { sqlcommand } from "@/app/server/cmds";
 import { PlacesEnum } from "@/app/server/enums";
 
+export async function GET(_: Request, { params }: ParamsType) {
+  try {
+    const place = db.prepare(sqlcommand.getById());
+    const result = place.get(params.placeId) as PlacesType;
+    if (result) {
+      return sendResponse(
+        {
+          message: PlacesEnum.PLACE_GETBYID_SUCCESS,
+          data: result,
+        },
+        200
+      );
+    } else {
+      return sendResponse(
+        {
+          message: PlacesEnum.PLACE_GETBYID_FAIL,
+          data: result,
+        },
+        200
+      );
+    }
+  } catch (err) {
+    const error = err as { message: string };
+    return sendResponse({ message: error.message }, 500);
+  }
+}
 export async function PUT(req: Request, { params }: ParamsType) {
   try {
     const body = await req.json();
@@ -60,7 +86,7 @@ export async function PUT(req: Request, { params }: ParamsType) {
       }
     }
   } catch (err) {
-    const error = err as { message: string; MongooseError: object };
+    const error = err as { message: string };
     return sendResponse({ message: error.message }, 500);
   }
 }

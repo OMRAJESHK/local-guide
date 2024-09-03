@@ -19,24 +19,28 @@ export async function GET(req: NextRequest, res: NextResponse) {
         400
       );
     } else {
-      const { limit = 10, page = 1 } = validation.data;
+      const { limit = 10, page = 1, query = "" } = validation.data;
       const limitValue = Number(limit);
       const pageValue = Number(page);
 
-      const places = db.prepare(sqlcommand.get(Number(pageValue), limitValue));
-      const placesCount = db.prepare(
-        sqlcommand.getCount(pageValue, limitValue)
+      const places = db.prepare(
+        sqlcommand.get(Number(pageValue), limitValue, query)
       );
+      const placesCount = db.prepare(sqlcommand.getAllCount());
 
       const getAllPlaces = places.all() as PlacesType[];
       const totalPlaces = placesCount.get() as { count: number | 0 };
+
       const pagination = getPagination(
         limitValue,
         pageValue,
         totalPlaces?.count
       );
 
-      return sendResponse({ pagination: pagination, data: getAllPlaces }, 200);
+      return sendResponse(
+        { pagination: pagination, data: getAllPlaces, query },
+        200
+      );
     }
   } catch (err) {
     console.error(err);
