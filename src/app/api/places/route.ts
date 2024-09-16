@@ -1,16 +1,16 @@
-import {
-  getPagination,
-  getPaginationValidation,
-  sendResponse,
-} from "@/app/server/uitls";
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../lib/db";
-import { type PlacesType } from "@/app/server/types";
-import { sqlcommand } from "@/app/server/cmds";
-import { placeValidator } from "@/app/server/validation";
-import { PlacesEnum } from "@/app/server/enums";
+import { type PlacesType } from "@/server/types";
+import { sqlcommand } from "@/server/cmds";
+import { placeValidator } from "@/server/validation";
+import { PlacesEnum } from "@/server/enums";
+import {
+  sendResponse,
+  getPagination,
+  getPaginationValidation,
+} from "@/server/uitls";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest, _: NextResponse) {
   try {
     const validation = getPaginationValidation(req.url);
     if (!validation.success) {
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (err) {
-    const error = err as { message: string; MongooseError: object };
+    const error = err as { message: string };
     return sendResponse({ message: error.message }, 500);
   }
 }

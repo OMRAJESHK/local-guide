@@ -116,7 +116,7 @@ export async function DELETE(_: Request, { params }: ParamsType) {
       );
     }
   } catch (err) {
-    const error = err as { message: string; MongooseError: object };
+    const error = err as { message: string };
     return sendResponse({ error, message: error.message }, 500);
   }
 }
