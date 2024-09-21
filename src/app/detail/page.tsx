@@ -10,19 +10,30 @@ const Detail = () => {
         <Link href="/places/1">Dashboard</Link>
         <a
           href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+          className="flex gap-2 group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
+          <div className="relative w-20">
+            <Image
+              src="https://static.toiimg.com/photo/imgsize-234548,msid-92477355/92477355.jpg"
+              alt="Vercel Logo"
+              className="dark:invert"
+              fill
+              priority
+            />
+          </div>
+          <div>
+            <h2 className="mb-3 text-2xl font-semibold">
+              Docs
+              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+                -&gt;
+              </span>
+            </h2>
+            <p className="m-0 max-w-[30ch] text-sm opacity-50">
+              Find in-depth information about Next.js features and API.
+            </p>
+          </div>
         </a>
 
         <a

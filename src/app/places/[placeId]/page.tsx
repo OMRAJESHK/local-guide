@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -17,14 +18,24 @@ const placeItem = {
 
 const PlaceDetails = () => {
   return (
-    <div className="mb-32 grid text-left lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-1">
+    <div className="mb-32 grid text-left lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-2 gap-2">
       <div className="group rounded-lg border border-slate-300 px-5 py-4 transition-colors hover:border-gray-300 bg-gray-100">
         <div className="flex gap-1">
           <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
             {placeItem.category}
           </span>
-          <span className="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">
-            {placeItem.known_for}
+          <span className="flex-grow">
+            <span className="flex-grow inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">
+              {placeItem.known_for}
+            </span>
+          </span>
+          <span>
+            <Link
+              href="/places/create"
+              className="flex-grow p-3 bg-slate-600 hover:bg-slate-500 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 text-white rounded-lg"
+            >
+              Add
+            </Link>
           </span>
         </div>
         <div className="my-4 ">
@@ -51,7 +62,7 @@ const PlaceDetails = () => {
             </p>
           </div>
         </div>
-    
+
         <div className="my-5">
           <p className="text-base ">{placeItem.remarks}</p>
         </div>
@@ -64,13 +75,7 @@ const PlaceDetails = () => {
             {placeItem.map_link}
           </a>
         </div>
-        <div className=" flex justify-between">
-          <Link
-            href="/places/create"
-            className="p-3 bg-slate-600 hover:bg-slate-500 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 text-white rounded-lg"
-          >
-            Add
-          </Link>
+        <div className="flex justify-between">
           <Link
             href="/places/edit"
             className="p-3 bg-slate-600 hover:bg-slate-500 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 text-white rounded-lg"
@@ -81,6 +86,15 @@ const PlaceDetails = () => {
             Delete
           </button>
         </div>
+      </div>
+      <div className="relative group rounded-lg border border-slate-300 px-5 py-4 transition-colors hover:border-gray-300 bg-gray-100">
+        <Image
+          src="https://static.toiimg.com/photo/imgsize-234548,msid-92477355/92477355.jpg"
+          alt="Vercel Logo"
+          className="dark:invert"
+          fill
+          priority
+        />
       </div>
     </div>
   );

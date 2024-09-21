@@ -16,8 +16,9 @@ export default function Layout({
 }>) {
   return (
     <html lang="en">
+      <link rel="icon" href="/places-logo.jpg" sizes="any" />
       <body className={`${inter.className}`}>
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <main className="flex min-h-screen flex-col items-center justify-start p-24 gap-2">
           <Headers />
           {children}
         </main>
