@@ -1,9 +1,9 @@
-import { type ParamsType, type PlacesType } from "@/app/server/types";
+import { type ParamsType, type PlacesType } from "@/server/types";
 import db from "../../../../../lib/db";
-import { sendResponse } from "../../../server/uitls";
-import { placeValidator } from "@/app/server/validation";
-import { sqlcommand } from "@/app/server/cmds";
-import { PlacesEnum } from "@/app/server/enums";
+import { sqlcommand } from "@/server/cmds";
+import { PlacesEnum } from "@/server/enums";
+import { placeValidator } from "@/server/validation";
+import { sendResponse } from "@/server/uitls";
 
 export async function GET(_: Request, { params }: ParamsType) {
   try {
@@ -50,6 +50,7 @@ export async function PUT(req: Request, { params }: ParamsType) {
         place,
         known_for,
         map_link,
+        photo,
         person_known,
         person_mobile,
         remarks,
@@ -62,6 +63,7 @@ export async function PUT(req: Request, { params }: ParamsType) {
         place,
         known_for,
         map_link,
+        photo,
         person_known,
         person_mobile,
         remarks,

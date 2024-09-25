@@ -71,6 +71,7 @@ export async function POST(req: NextRequest) {
         place,
         known_for,
         map_link,
+        photo,
         person_known,
         person_mobile,
         remarks,
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
         place,
         known_for,
         map_link,
+        photo,
         person_known,
         person_mobile,
         remarks

@@ -9,6 +9,7 @@ export const placeValidator = z
     place: z.string().min(1, ErrorMessages.PLACE_REQUIRED),
     known_for: z.string().min(1, ErrorMessages.KNOWN_FOR_REQUIRED),
     map_link: z.string().min(1, ErrorMessages.MAP_REQUIRED),
+    photo: z.string().optional(),
     person_known: z.string().optional(),
     person_mobile: z.string().optional(),
     remarks: z.string().optional(),
