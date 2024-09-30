@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const PlaceItem = (props: PlaceItemProps) => {
+const PlaceListItem = (props: PlaceItemProps) => {
   const { id, title, description, photo, place } = props;
   return (
     <Link
@@ -29,4 +29,4 @@ const PlaceItem = (props: PlaceItemProps) => {
   );
 };
 
-export default PlaceItem;
+export default PlaceListItem;

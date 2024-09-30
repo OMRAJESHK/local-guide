@@ -4,11 +4,8 @@ import { type PlacesType } from "@/server/types";
 import { sqlcommand } from "@/server/cmds";
 import { placeValidator } from "@/server/validation";
 import { PlacesEnum } from "@/server/enums";
-import {
-  sendResponse,
-  getPagination,
-  getPaginationValidation,
-} from "@/server/uitls";
+import { sendResponse, getPaginationValidation } from "@/server/uitls";
+import { getPlacesData } from "./helper";
 
 export async function GET(req: NextRequest, _: NextResponse) {
   try {
@@ -23,18 +20,10 @@ export async function GET(req: NextRequest, _: NextResponse) {
       const limitValue = Number(limit);
       const pageValue = Number(page);
 
-      const places = db.prepare(
-        sqlcommand.get(Number(pageValue), limitValue, query)
-      );
-      const placesCount = db.prepare(sqlcommand.getAllCount());
-
-      const getAllPlaces = places.all() as PlacesType[];
-      const totalPlaces = placesCount.get() as { count: number | 0 };
-
-      const pagination = getPagination(
+      const { getAllPlaces, pagination } = await getPlacesData(
         limitValue,
         pageValue,
-        totalPlaces?.count
+        query
       );
 
       return sendResponse(

@@ -5,3 +5,9 @@ export type PlaceItemProps = {
   place: string;
   photo: string;
 };
+
+export type PlacesServerProps = {
+  limitValue: number;
+  pageValue: number;
+  query: string;
+};
