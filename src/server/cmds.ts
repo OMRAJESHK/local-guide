@@ -15,8 +15,8 @@ export const sqlcommand = {
   },
 
   insert: () =>
-    `INSERT INTO places (id, title, description, category, place, known_for, map_link, person_known, person_mobile, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO places (id, title, description, category, place, known_for, map_link, photo, person_known, person_mobile, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   update: () =>
-    `UPDATE places SET title = ?, description = ?, category = ?, place = ?, known_for = ?, map_link = ?, person_known = ?, person_mobile = ?, remarks = ? WHERE id = ?`,
+    `UPDATE places SET title = ?, description = ?, category = ?, place = ?, known_for = ?, map_link = ?, photo = ?, person_known = ?, person_mobile = ?, remarks = ? WHERE id = ?`,
   delete: () => `DELETE FROM places WHERE id = ?`,
 };
