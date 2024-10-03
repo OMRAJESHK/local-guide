@@ -3,7 +3,7 @@ import { paginationValidator, placeValidator } from "./validation";
 
 export type PaginationType = {
   limit: number;
-  currentPage: number;
+  currentPage: string;
   totalPages: number;
 };
 export type ResponseType = {
@@ -16,7 +16,7 @@ export type ResponseType = {
 export type QueryType = z.infer<typeof paginationValidator>;
 export type PlacesType = z.infer<typeof placeValidator>;
 export type ParamsType = { params: { placeId: string } };
-export type SearchQueryType = { params: { query: string } };
+export type SearchQueryType = { params?: { query: string } };
 
 export type placeItemData = {
   id: string;

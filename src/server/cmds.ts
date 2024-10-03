@@ -13,6 +13,16 @@ export const sqlcommand = {
       (page - 1) * limit
     }`;
   },
+  getWithNoLimit: (query: string) => {
+    return `SELECT COUNT(*) AS count FROM places WHERE title LIKE '%${query}%'
+   OR description LIKE '%${query}%'
+   OR category LIKE '%${query}%'
+   OR place LIKE '%${query}%'
+   OR known_for LIKE '%${query}%'
+   OR map_link LIKE '%${query}%'
+   OR person_known LIKE '%${query}%'
+   OR remarks LIKE '%${query}%'`;
+  },
 
   insert: () =>
     `INSERT INTO places (id, title, description, category, place, known_for, map_link, photo, person_known, person_mobile, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,

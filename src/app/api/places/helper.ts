@@ -5,20 +5,21 @@ import { getPagination } from "@/server/uitls";
 
 export async function getPlacesData(
   limitValue: number,
-  pageValue: number,
+  pageValue: string,
   query: string
 ) {
   const places = db.prepare(
     sqlcommand.get(Number(pageValue), limitValue, query)
   );
-  const placesCount = db.prepare(sqlcommand.getAllCount());
+  const placesCount = db.prepare(sqlcommand.getWithNoLimit(query));
 
   const getAllPlaces = places.all() as PlacesType[];
   const totalPlaces = placesCount.get() as { count: number | 0 };
 
-  const pagination = getPagination(limitValue, pageValue, totalPlaces?.count);
+  const pagination = getPagination(limitValue, pageValue, totalPlaces.count);
+  console.log("cuptopaginationone", pagination);
 
-  return { getAllPlaces, totalPlaces, pagination };
+  return { getAllPlaces, totalPlaces: totalPlaces.count, pagination };
 }
 
 export function getPlaceData(placeId: string) {
