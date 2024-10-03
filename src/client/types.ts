@@ -8,6 +8,13 @@ export type PlaceItemProps = {
 
 export type PlacesServerProps = {
   limitValue: number;
-  pageValue: number;
+  pageValue: string;
   query: string;
+};
+export type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  query: string;
+  count: number;
+  // onNext: () => void;
 };

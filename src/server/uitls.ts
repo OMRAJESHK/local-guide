@@ -16,11 +16,11 @@ export function getPaginationValidation(urlString: string) {
   return paginationValidator.safeParse(query);
 }
 
-export function getPagination(limit: number, page: number, totalUsers: number) {
+export function getPagination(limit: number, page: string, total: number) {
   const pagination: PaginationType = {
     limit,
     currentPage: page,
-    totalPages: Math.ceil(totalUsers / limit),
+    totalPages: Math.ceil(total / limit),
   };
   return pagination;
 }
