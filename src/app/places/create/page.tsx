@@ -1,5 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import Input from "@/client/components/input/input";
+import Textarea from "@/client/components/textarea/textarea";
+import {
+  InputAttributesEnum,
+  type InputElementAttributeType,
+  type PlaceDataType,
+} from "@/client/types";
+import { validationsConfig } from "@/client/validation/validationsConfig";
+import React, { type FormEvent, useState } from "react";
 
 const placeItem = {
   title: "Computer Peripherals & Laptop Accossories",
@@ -14,31 +22,50 @@ const placeItem = {
   remarks: "Metro is available @ 1.2 km",
 };
 
-type PlaceData = {
-  title: string;
-  description: string;
-  category: string;
-  place: string;
-  known_for: string;
-  map_link: string;
-  person_known: string;
-  person_mobile: string;
-  remarks: string;
+const defaultInputValue = {
+  value: "",
+  error: { hasError: false, message: "" },
+};
+const inputFields = [
+  InputAttributesEnum.title,
+  InputAttributesEnum.description,
+  InputAttributesEnum.category,
+  InputAttributesEnum.place,
+  InputAttributesEnum.known_for,
+  InputAttributesEnum.map_link,
+  InputAttributesEnum.photo,
+  InputAttributesEnum.person_known,
+  InputAttributesEnum.person_mobile,
+  InputAttributesEnum.remarks,
+];
+const initialData = (): PlaceDataType => {
+  let fields = {} as PlaceDataType;
+  inputFields.forEach(
+    (
+      field:
+        | InputAttributesEnum.title
+        | InputAttributesEnum.description
+        | InputAttributesEnum.category
+        | InputAttributesEnum.place
+        | InputAttributesEnum.known_for
+        | InputAttributesEnum.map_link
+        | InputAttributesEnum.photo
+        | InputAttributesEnum.person_known
+        | InputAttributesEnum.person_mobile
+        | InputAttributesEnum.remarks
+    ) => {
+      fields = {
+        ...fields,
+        ...{ [field]: defaultInputValue },
+      };
+    }
+  );
+  return fields;
 };
 
-const initialData = {
-  title: "",
-  description: "",
-  category: "",
-  place: "",
-  known_for: "",
-  map_link: "",
-  person_known: "",
-  person_mobile: "",
-  remarks: "",
-};
 const PlaceCreatePage = () => {
-  const [placeData, setPlaceData] = useState<PlaceData>(initialData);
+  const [placeData, setPlaceData] = useState<PlaceDataType>(initialData());
+
   function toggleAccordion(index: number) {
     const content = document.getElementById(`content-${index}`);
     const icon = document.getElementById(`icon-${index}`);
@@ -74,91 +101,157 @@ const PlaceCreatePage = () => {
     }
   }
 
+  function onChangeHandler(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = event.target as InputElementAttributeType;
+    setPlaceData((prev: PlaceDataType) => ({
+      ...prev,
+      [name]: { ...prev[name], value: value },
+    }));
+  }
+
+  function onBlurHandler(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = event.target as InputElementAttributeType;
+
+    if (value.trim().length === 0) {
+      setPlaceData((prev: PlaceDataType) => ({
+        ...prev,
+        [name]: {
+          ...prev[name],
+          error: { hasError: true, message: "Required...!" },
+        },
+      }));
+    } else {
+      setPlaceData((prev: PlaceDataType) => ({
+        ...prev,
+        [name]: {
+          ...prev[name],
+          error: { hasError: false, message: "" },
+        },
+      }));
+    }
+  }
+
+  function checkValidity() {
+    let isValid = false;
+    let errorfields: Array<InputAttributesEnum> = [];
+    const placeKeys = Object.keys(placeData) as Array<InputAttributesEnum>;
+    placeKeys.forEach((field) => {
+      if (
+        validationsConfig[field] &&
+        [
+          InputAttributesEnum.title,
+          InputAttributesEnum.place,
+          InputAttributesEnum.description,
+          InputAttributesEnum.category,
+          InputAttributesEnum.map_link,
+          InputAttributesEnum.known_for,
+        ].includes(field)
+      ) {
+        const validate = validationsConfig[field];
+        isValid = validate(placeData[field].value);
+        if (!isValid) {
+          errorfields = [...errorfields, field];
+        }
+      }
+    });
+
+    return { isValid, fields: errorfields };
+  }
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const { isValid, fields } = checkValidity();
+    console.log("placeDataSuccessMsg", isValid, fields);
+    if (isValid) {
+      console.log("placeDataSuccessMsginner", isValid, fields);
+    } else {
+      fields.forEach((field) => {
+        setPlaceData((prev: PlaceDataType) => ({
+          ...prev,
+          [field]: {
+            ...prev[field],
+            error: { hasError: true, message: "Required...!" },
+          },
+        }));
+      });
+    }
+  }
   return (
     <div className="mb-32 grid text-left lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-1">
       <div className="group rounded-lg border border-slate-300 px-5 py-4 transition-colors hover:border-gray-300 bg-gray-100">
-        <form>
+        <form onSubmit={onSubmit}>
           <div className="grid gap-6 mb-6 md:grid-cols-2">
-            <div>
-              <label
-                htmlFor="titleOfThePlace"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Title of the Place
-              </label>
-              <input
-                type="text"
-                id="titleOfThePlace"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="eg: Computer Peripherals & Laptop Accossories, Book Store etc."
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="addressOfThePlace"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Address Of The Place
-              </label>
-              <input
-                type="text"
-                id="addressOfThePlace"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="S.P. road Bangalore"
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="CategoryOfThePlace"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Category of the Place
-              </label>
+            <Input
+              type="text"
+              name="title"
+              label="Title of the Place"
+              placeholder="eg: Computer Peripherals & Laptop Accossories, Book Store etc."
+              onChange={onChangeHandler}
+              onBlur={onBlurHandler}
+              value={placeData.title.value}
+              error={placeData.title.error}
+            />
+            <Input
+              type="text"
+              label="Address of the Place"
+              name="place"
+              placeholder="eg: S.P. Road, Bangalore, Karnataka1"
+              onChange={onChangeHandler}
+              onBlur={onBlurHandler}
+              value={placeData.place.value}
+              error={placeData.place.error}
+            />
 
-              <input
-                id="CategoryOfThePlace"
-                type="text"
-                name="autocomplete"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                list="some-data"
-                placeholder="choose a category"
-              />
-              <datalist id="some-data">
-                <option value="foo" />
-                <option value="bar" />
-                <option value="baz" />
-              </datalist>
-            </div>
-            <div>
-              <label
-                htmlFor="placeKnownFor"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Place Known For
-              </label>
-              <input
-                type="text"
-                id="placeKnownFor"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="best in electronics"
-                required
-              />
-            </div>
+            <Input
+              type="text"
+              label="Category of the Place"
+              name="category"
+              placeholder="eg: Electronics"
+              onChange={onChangeHandler}
+              onBlur={onBlurHandler}
+              value={placeData.category.value}
+              listid="categoryList"
+              listData={[
+                { id: "0", label: "FOO", value: "the foo label" },
+                { id: "1", label: "BAR", value: "bar" },
+              ]}
+              error={placeData.category.error}
+            />
+
+            <Input
+              type="text"
+              label="Place Known For"
+              name="known_for"
+              placeholder="eg: best in electronics"
+              onChange={onChangeHandler}
+              onBlur={onBlurHandler}
+              error={placeData.known_for.error}
+              value={placeData.known_for.value}
+            />
+            <Input
+              type="text"
+              label="Google Link"
+              name="map_link"
+              placeholder="eg: google map link"
+              onChange={onChangeHandler}
+              onBlur={onBlurHandler}
+              value={placeData.map_link.value}
+              error={placeData.map_link.error}
+            />
           </div>
+
           <div className="mb-6">
-            <label
-              htmlFor="description"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="the description of the place"
-              required
+            <Textarea
+              label="Description"
+              name="description"
+              onChange={onChangeHandler}
+              onBlur={onBlurHandler}
+              placeholder="eg: Famous for Chats."
+              value={placeData.description.value}
+              error={placeData.description.error}
             />
           </div>
           <div className="mb-6">
@@ -189,84 +282,45 @@ const PlaceCreatePage = () => {
               >
                 <div className="pb-5 text-sm text-slate-500">
                   <div className="grid gap-6 mb-6 md:grid-cols-2">
-                    <div>
-                      <label
-                        htmlFor="localPersonKnown"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Local Person Known
-                      </label>
-                      <input
-                        type="text"
-                        id="localPersonKnown"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="eg: Computer Peripherals & Laptop Accossories, Book Store etc."
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="localPersonMobile"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Local Person Mobile
-                      </label>
-                      <input
-                        type="text"
-                        id="localPersonMobile"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="S.P. road Bangalore"
-                        required
-                      />
-                    </div>
+                    <Input
+                      type="text"
+                      label="Local Person Known"
+                      name="person_known"
+                      placeholder="eg: Kumaranna"
+                      onChange={onChangeHandler}
+                      onBlur={onBlurHandler}
+                      value={placeData.person_known.value}
+                    />
 
-                    <div>
-                      <label
-                        htmlFor="mapLink"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Image Link
-                      </label>
-                      <input
-                        type="url"
-                        id="mapLink"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="https://maps.app.goo.gl/bouyPNDvtnTjZuwH8"
-                        required
-                      />
-                      <button type="button">preview</button>
-                    </div>
+                    <Input
+                      type="text"
+                      label="Local Person Mobile"
+                      name="person_mobile"
+                      placeholder="eg: 8956230122"
+                      onChange={onChangeHandler}
+                      onBlur={onBlurHandler}
+                      value={placeData.person_mobile.value}
+                    />
 
-                    <div>
-                      <label
-                        htmlFor="mapLink"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Map Link
-                      </label>
-                      <input
-                        type="url"
-                        id="mapLink"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="https://maps.app.goo.gl/bouyPNDvtnTjZuwH8"
-                        required
-                      />
-                      <button type="button">preview</button>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="placeRemarks"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Remarks
-                      </label>
-                      <textarea
-                        id="placeRemarks"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="the remarks of the place"
-                        required
-                      />
-                    </div>
+                    <Input
+                      type="text"
+                      label="Image Link"
+                      name="mapLink"
+                      placeholder="eg: https://maps.app.goo.gl/bouyPNDvtnTjZuw09"
+                      onChange={onChangeHandler}
+                      onBlur={onBlurHandler}
+                      value={placeData.map_link.value}
+                    />
+
+                    <Textarea
+                      label="Remarks"
+                      name="remarks"
+                      onChange={onChangeHandler}
+                      onBlur={onBlurHandler}
+                      placeholder="eg: This place is always crowded."
+                      value={placeData.remarks.value}
+                      error={placeData.remarks.error}
+                    />
                   </div>
                 </div>
               </div>

@@ -17,7 +17,6 @@ export async function getPlacesData(
   const totalPlaces = placesCount.get() as { count: number | 0 };
 
   const pagination = getPagination(limitValue, pageValue, totalPlaces.count);
-  console.log("cuptopaginationone", pagination);
 
   return { getAllPlaces, totalPlaces: totalPlaces.count, pagination };
 }
